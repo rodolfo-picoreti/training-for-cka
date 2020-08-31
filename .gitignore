@@ -1,0 +1,9 @@
+*.pem
+*.csr
+*.json
+*.log
+*.kubeconfig
+encryption-config.yaml
+.vagrant/*
+base/.vagrant/*
+*.box
