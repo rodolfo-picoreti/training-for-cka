@@ -186,8 +186,12 @@ cfssl gencert \
 
 ## Api Server
 
-KUBERNETES_PUBLIC_ADDRESS=192.168.1.9
-CONTROLLER_INTERNAL_IPS=192.168.1.10,192.168.1.11,192.168.1.12
+# TODO: Create loadbalancer
+KUBERNETES_PUBLIC_ADDRESS=192.168.1.10
+CONTROLLER_INTERNAL_IPS=192.168.1.11,192.168.1.12
+# The Kubernetes API server is automatically assigned the kubernetes internal dns name,
+# which will be linked to the first IP address from the address range.
+CLUSTER_FIRST_IP=10.32.0.1
 KUBERNETES_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
 
 cat > kubernetes-csr.json <<EOF
@@ -213,7 +217,7 @@ cfssl gencert \
   -ca=ca.pem \
   -ca-key=ca-key.pem \
   -config=ca-config.json \
-  -hostname=10.32.0.1,${CONTROLLER_INTERNAL_IPS},${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,${KUBERNETES_HOSTNAMES} \
+  -hostname=${CLUSTER_FIRST_IP},${CONTROLLER_INTERNAL_IPS},${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,${KUBERNETES_HOSTNAMES} \
   -profile=kubernetes \
   kubernetes-csr.json | cfssljson -bare kubernetes
 
