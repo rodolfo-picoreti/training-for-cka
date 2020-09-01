@@ -8,7 +8,7 @@ INTERNAL_IP=`ip address | grep 192.168.1 | cut -d' ' -f 6 | cut -d'/' -f 1`
 
 sudo mkdir -p /etc/kubernetes/config
 
-cd /data/controller-certs
+cd ./controller-certs
 sudo mkdir -p /var/lib/kubernetes/
 sudo cp ca.pem ca-key.pem \
   kubernetes-key.pem kubernetes.pem \
@@ -112,5 +112,5 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable kube-apiserver kube-controller-manager kube-scheduler
-sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
+sudo systemctl reenable kube-apiserver kube-controller-manager kube-scheduler
+sudo systemctl restart kube-apiserver kube-controller-manager kube-scheduler --no-block

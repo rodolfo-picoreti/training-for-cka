@@ -109,10 +109,33 @@ kubectl config set-context default \
 
 kubectl config use-context default --kubeconfig=admin.kubeconfig
 
+## admin external user
+
+kubectl config set-cluster kubernetes-the-hard-way \
+  --certificate-authority=ca.pem \
+  --embed-certs=true \
+  --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
+  --kubeconfig=admin-external.kubeconfig
+
+kubectl config set-credentials admin \
+  --client-certificate=admin.pem \
+  --client-key=admin-key.pem \
+  --embed-certs=true \
+  --kubeconfig=admin-external.kubeconfig
+
+kubectl config set-context default \
+  --cluster=kubernetes-the-hard-way \
+  --user=admin \
+  --kubeconfig=admin-external.kubeconfig
+
+kubectl config use-context default --kubeconfig=admin-external.kubeconfig
 
 for worker in $workers; do
   cp ${worker}.kubeconfig kube-proxy.kubeconfig worker-certs/${worker}/
 done
 
-cp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig \
+cp admin.kubeconfig admin-external.kubeconfig \
+  kube-controller-manager.kubeconfig kube-scheduler.kubeconfig \
   controller-certs/
+
+rm *.csr *.pem *.kubeconfig

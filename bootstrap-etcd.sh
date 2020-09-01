@@ -4,7 +4,7 @@ set -e
 
 source variables.sh
 
-cd /data/controller-certs
+cd ./controller-certs
 sudo mkdir -p /etc/etcd /var/lib/etcd
 sudo chmod 700 /var/lib/etcd
 sudo cp ca.pem kubernetes-key.pem kubernetes.pem /etc/etcd/
@@ -46,5 +46,5 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable etcd
-sudo systemctl start etcd
+sudo systemctl reenable etcd
+sudo systemctl restart etcd --no-block
