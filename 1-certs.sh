@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source variables.sh
+
 cat > ca-config.json <<EOF
 {
   "signing": {
@@ -69,12 +71,10 @@ cfssl gencert \
 
 ## Workers
 
-instances=worker-0
-
-for instance in $instances; do
-cat > ${instance}-csr.json <<EOF
+for worker in $workers; do
+cat > ${worker}-csr.json <<EOF
 {
-  "CN": "system:node:${instance}",
+  "CN": "system:node:${worker}",
   "key": {
     "algo": "rsa",
     "size": 2048
@@ -95,9 +95,9 @@ cfssl gencert \
   -ca=ca.pem \
   -ca-key=ca-key.pem \
   -config=ca-config.json \
-  -hostname=${instance} \
+  -hostname=${worker} \
   -profile=kubernetes \
-  ${instance}-csr.json | cfssljson -bare ${instance}
+  ${worker}-csr.json | cfssljson -bare ${worker}
 done
 
 ## Controller Manager
@@ -186,14 +186,6 @@ cfssl gencert \
 
 ## Api Server
 
-# TODO: Create loadbalancer
-KUBERNETES_PUBLIC_ADDRESS=192.168.1.10
-CONTROLLER_INTERNAL_IPS=192.168.1.11,192.168.1.12
-# The Kubernetes API server is automatically assigned the kubernetes internal dns name,
-# which will be linked to the first IP address from the address range.
-CLUSTER_FIRST_IP=10.32.0.1
-KUBERNETES_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
-
 cat > kubernetes-csr.json <<EOF
 {
   "CN": "kubernetes",
@@ -252,9 +244,9 @@ cfssl gencert \
 ## Copying certs
 
 mkdir -p controller-certs worker-certs
-for instance in $instances; do
-  mkdir -p worker-certs/$instance
-  cp ca.pem $instance-key.pem $instance.pem worker-certs/$instance/
+for worker in $workers; do
+  mkdir -p worker-certs/$worker
+  cp ca.pem $worker-key.pem $worker.pem worker-certs/$worker/
 done
 
 cp ca.pem ca-key.pem \

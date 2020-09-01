@@ -1,30 +1,28 @@
 #!/bin/bash
 
-KUBERNETES_PUBLIC_ADDRESS=192.168.1.9
+source variables.sh
 
 ## worker nodes
 
-instances=worker-0
-
-for instance in $instances; do
+for worker in $workers; do
   kubectl config set-cluster kubernetes-the-hard-way \
     --certificate-authority=ca.pem \
     --embed-certs=true \
     --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
-    --kubeconfig=${instance}.kubeconfig
+    --kubeconfig=${worker}.kubeconfig
 
-  kubectl config set-credentials system:node:${instance} \
-    --client-certificate=${instance}.pem \
-    --client-key=${instance}-key.pem \
+  kubectl config set-credentials system:node:${worker} \
+    --client-certificate=${worker}.pem \
+    --client-key=${worker}-key.pem \
     --embed-certs=true \
-    --kubeconfig=${instance}.kubeconfig
+    --kubeconfig=${worker}.kubeconfig
 
   kubectl config set-context default \
     --cluster=kubernetes-the-hard-way \
-    --user=system:node:${instance} \
-    --kubeconfig=${instance}.kubeconfig
+    --user=system:node:${worker} \
+    --kubeconfig=${worker}.kubeconfig
 
-  kubectl config use-context default --kubeconfig=${instance}.kubeconfig
+  kubectl config use-context default --kubeconfig=${worker}.kubeconfig
 done
 
 ## kube-proxy
@@ -112,8 +110,8 @@ kubectl config set-context default \
 kubectl config use-context default --kubeconfig=admin.kubeconfig
 
 
-for instance in $instances; do
-  cp ${instance}.kubeconfig kube-proxy.kubeconfig worker-certs/${instance}/
+for worker in $workers; do
+  cp ${worker}.kubeconfig kube-proxy.kubeconfig worker-certs/${worker}/
 done
 
 cp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig \

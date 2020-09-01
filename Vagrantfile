@@ -9,6 +9,13 @@ controllers = {
 
 Vagrant.configure("2") do |config|
 
+  config.vm.define "lb" do |lb|
+    lb.vm.box = "kubernetes"
+    lb.vm.network "private_network", ip: "192.168.1.9"
+    lb.vm.synced_folder ".", "/data"
+    lb.vm.hostname = "lb"
+  end
+
   controllers.each_with_index do |(hostname, info), index|
     config.vm.define hostname do |cfg|
       cfg.vm.box = "kubernetes"

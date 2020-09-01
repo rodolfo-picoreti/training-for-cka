@@ -2,7 +2,7 @@
 
 set -e
 
-ETCD_INITIAL_CLUSTER=controller-0=https://192.168.1.10:2380,controller-1=https://192.168.1.11:2380,controller-2=https://192.168.1.12:2380
+source variables.sh
 
 cd /data/controller-certs
 sudo mkdir -p /etc/etcd /var/lib/etcd

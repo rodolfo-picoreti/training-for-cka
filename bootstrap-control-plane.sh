@@ -2,9 +2,7 @@
 
 set -e
 
-CLUSTER_CIDR=10.200.0.0/16
-SERVICE_CLUSTER_IP_CIDR=10.32.0.0/24
-ETCD_SERVERS=https://192.168.1.10:2379,https://192.168.1.11:2379,https://192.168.1.12:2379
+source variables.sh
 
 INTERNAL_IP=`ip address | grep 192.168.1 | cut -d' ' -f 6 | cut -d'/' -f 1`
 
