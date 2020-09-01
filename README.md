@@ -16,6 +16,7 @@ vagrant up
 ./create-kubelet-rbac.sh
 
 ./create-coredns.sh
+```
 
 ## References
 **Components**: https://kubernetes.io/docs/concepts/overview/components/

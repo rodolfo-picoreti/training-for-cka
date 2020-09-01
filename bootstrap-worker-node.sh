@@ -3,11 +3,11 @@
 set -e
 
 source variables.sh
+POD_CIDR=${POD_CIDRS[$HOSTNAME]}
 
 sudo swapoff -a
 
 # CNI
-
 cat <<EOF | sudo tee /etc/cni/net.d/10-bridge.conf
 {
     "cniVersion": "0.3.1",

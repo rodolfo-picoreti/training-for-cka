@@ -10,7 +10,7 @@ CLUSTER_FIRST_IP=10.32.0.1
 #
 KUBERNETES_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
 #
-workers="worker-0 worker-1 worker-2"
+workers="worker-0 worker-1"
 
 # Etcd Config
 ETCD_INITIAL_CLUSTER=controller-0=https://192.168.1.10:2380,controller-1=https://192.168.1.11:2380,controller-2=https://192.168.1.12:2380
@@ -21,5 +21,7 @@ SERVICE_CLUSTER_IP_CIDR=10.32.0.0/24
 ETCD_SERVERS=https://192.168.1.10:2379,https://192.168.1.11:2379,https://192.168.1.12:2379
 
 # Worker Node Config
-POD_CIDR=10.244.0.0/16
+declare -A WORKER_IPS=(["worker-0"]="192.168.1.30" ["worker-1"]="192.168.1.31")
+declare -A POD_CIDRS=(["worker-0"]="10.240.0.0/24" ["worker-1"]="10.240.1.0/24")
+
 CLUSTER_DNS=10.32.0.10
